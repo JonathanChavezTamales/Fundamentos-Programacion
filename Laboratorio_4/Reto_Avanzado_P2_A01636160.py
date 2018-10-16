@@ -4,7 +4,7 @@
 from time import sleep
 from random import randrange
 
-palabras = ["perro", "gato", "leon", "cebra"]
+palabras = ["gatoo"]
 
 class Player:
     def __init__(self, name, vidas, puntos):
@@ -34,18 +34,58 @@ def new_game(player):
 
     palabra = palabras[randrange(0,len(palabras))]
     estado_palabra = [x*0 for x in range(len(palabra))]
-    print(f"\n{player.name}\t\t\t\tVidas: "+ player.vidas*"❤️ ")
-    draw()
-    i = 0
     print("\t\t\t", end="")
-    while i<len(palabra):
-        if estado_palabra[i] == 0:
-            print("_ ", end="")
-        else:
-            print(palabra[i]+" ", end="")
 
-        i+=1
-    input("\n\n\n\nToque enter para salir.")
+    #Bandera para saber si ganó (1), perdió (-1) o todavía no acaba (0)
+    win_status = 0
+    while win_status == 0:
+        i = 0
+        print(f"\n{player.name}\t\t\t\tVidas: "+ player.vidas*"❤️ ")
+        draw()
+
+        print("\t\t\t", end="")
+        while i<len(palabra):
+            if estado_palabra[i] == 0:
+                print("_ ", end="")
+            else:
+                print(palabra[i]+" ", end="")
+
+            i+=1
+
+        guess = input("\n\nIngrese una letra o palabra: ")
+
+
+        """Lógica de comparación de palabras """
+
+
+        if guess == palabra:
+            print("HAS GANADO! La palabra fue ",palabra)
+            win_status = 1
+
+        elif guess in palabra:
+            for i, j in enumerate(palabra):
+                if j == guess:
+                    print("q rollo")
+                    estado_palabra[i] = 1
+
+        elif guess == palabra:
+            print("HAS GANADO! La palabra fue",palabra)
+            win_status = 1
+
+        else:
+            player.vidas -= 1
+
+
+        #Revisa si ha perdido
+        if player.vidas <= 0:
+            print("HAS PERDIDO! La palabra fue",palabra)
+            win_status = -1
+
+        #Revisa si ha ganado
+        if sum(estado_palabra)==len(estado_palabra):
+            print("HAS GANADO! La palabra fue",palabra)
+            win_status = 1
+
 
 
 def register(player):
