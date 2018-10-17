@@ -4,7 +4,8 @@
 from time import sleep
 from random import randrange
 
-palabras = ["gatoo"]
+palabras = ["gato", "perro", "elefante", "mariposa", "leon", "rana",
+            "pez", "borrego", "canguro", "ballena", "delfin"]
 
 class Player:
     def __init__(self, name, vidas, puntos):
@@ -13,7 +14,7 @@ class Player:
         self.puntos = puntos
 
 
-def show_title():
+def show_title(player):
 
 
     title = "   💀💀 🅰 🅷 🅾 🆁 🅲 🅰 🅳 🅾 💀💀"
@@ -23,7 +24,8 @@ def show_title():
     sleep(.3)
     print(50*"*")
     sleep(.3)
-    print("\n\t\t1.-Nuevo Juego\n\t\t2.-Registrarse\n\t\t3.-Iniciar sesión"\
+    print(f"\n\tBienvenid@, {player.name}")
+    print("\n\t\t1.-Nuevo Juego\n\t\t2.-Registro\n\t\t3.-Leaderboard"\
          +"\n\t\t4.-Salir")
 
 
@@ -31,9 +33,16 @@ def new_game(player):
     """Aquí se puede usar random.choice(lista) y se puede optimizar con lista
     anidada """
 
+    #Se inicializan las vidas
+    player.vidas = 6
 
+    #Se escoge la palabra y sus caracteres no son adivinados
     palabra = palabras[randrange(0,len(palabras))]
     estado_palabra = [x*0 for x in range(len(palabra))]
+
+    print("\n\n\t\tI N S T R U C C I O N E S")
+    print(">>>Solo escriba la palabra o la letra que crea correcta \n"\
+         +">>>Escriba únicamente en minúsculas y sin tildes.")
     print("\t\t\t", end="")
 
     #Bandera para saber si ganó (1), perdió (-1) o todavía no acaba (0)
@@ -41,9 +50,11 @@ def new_game(player):
     while win_status == 0:
         i = 0
         print(f"\n{player.name}\t\t\t\tVidas: "+ player.vidas*"❤️ ")
-        draw()
+        draw(player.vidas)
 
         print("\t\t\t", end="")
+
+        #Imprime los espacios blancos o las letras
         while i<len(palabra):
             if estado_palabra[i] == 0:
                 print("_ ", end="")
@@ -52,7 +63,7 @@ def new_game(player):
 
             i+=1
 
-        guess = input("\n\nIngrese una letra o palabra: ")
+        guess = input("\n\nIngrese una sola letra o la palabra: ")
 
 
         """Lógica de comparación de palabras """
@@ -61,16 +72,17 @@ def new_game(player):
         if guess == palabra:
             print("HAS GANADO! La palabra fue ",palabra)
             win_status = 1
+            player.puntos += 1
+
+        elif len(guess)>1:
+            print("\n¡Solamente ingrese una letra o una palabra!")
 
         elif guess in palabra:
+
+            #Cambia el estado de cada caracter que coincida con el leído
             for i, j in enumerate(palabra):
                 if j == guess:
-                    print("q rollo")
                     estado_palabra[i] = 1
-
-        elif guess == palabra:
-            print("HAS GANADO! La palabra fue",palabra)
-            win_status = 1
 
         else:
             player.vidas -= 1
@@ -85,37 +97,62 @@ def new_game(player):
         if sum(estado_palabra)==len(estado_palabra):
             print("HAS GANADO! La palabra fue",palabra)
             win_status = 1
+            player.puntos += 1
+
 
 
 
 def register(player):
-    print("¡Regístrate ahora!")
-    input("Toque enter para salir.")
-
-
-def login(player):
     print(f"¿No eres {player.name}?\nInicia sesión ahora.")
+    name = input("Ingresa tu usuario:  ")
+    global current_player = Player(name, 6, 0)
+    print(current_player.name)
+    print(player.name)
     input("Toque enter para salir.")
 
-def draw():
-    print("__________\n|       |\n|\n|\n|\n|\n|\n|\n|\n--")
 
+def leaderboard(player):
+    print(f"\n\n\nTu puntaje: {player.puntos}")
+    input("Toque enter para salir.")
+
+def draw(vidas):
+
+    if vidas == 6:
+        print("__________\n|       |\n|\n|\n|\n|\n|\n|\n|\n--")
+    elif vidas == 5:
+        print("__________\n|       |\n|      😵\n|\n|\n|\n|\n|\n|\n--")
+    elif vidas == 4:
+        print("__________\n|       |\n|      😵\n|      / \n|"\
+        +"\n|\n|\n|\n|\n--")
+    elif vidas == 3:
+        print("__________\n|       |\n|      😵\n|      / \\\n|"\
+        +"\n|\n|\n|\n|\n--")
+    elif vidas == 2:
+        print("__________\n|       |\n|      😵\n|      / \\\n|"\
+        +"\t|\n|\n|\n|\n|\n--")
+    elif vidas == 1:
+        print("__________\n|       |\n|      😵\n|      / \\\n|"\
+        +"\t|\n|      /\n|\n|\n|\n--")
+    elif vidas == 0:
+        print("__________\n|       |\n|      😵\n|      / \\\n|"\
+        +"\t|\n|      /\\\n|\n|\n|\n--")
 
 def main():
 
     game_status = True
-    current_player = Player("Invitado", 3, 0)
+    current_player = Player("Invitado", 6, 0)
+
     while game_status==True:
 
-        show_title()
+        show_title(current_player)
         opc = input("\nIngrese una opción: ")
 
         if opc == "1":
             new_game(current_player)
         elif opc == "2":
-            register()
+            register(current_player)
         elif opc == "3":
-            login(current_player)
+            leaderboard(current_player)
         elif opc == "4":
             game_status = False
     print("Jonathan Chávez")
