@@ -8,6 +8,15 @@ palabras = ["gato", "perro", "elefante", "mariposa", "leon", "rana",
             "pez", "borrego", "canguro", "ballena", "delfin"]
 
 class Player:
+    """Clase de jugador que se utliza para guardar sus datos"""
+
+    """
+        Atributos:
+            name -- nombre del jugador, por defecto será invitado
+            vidas -- vidas con las que comienza el jugador
+            puntos -- puntos que gana el jugador después cada partida
+    """
+
     def __init__(self, name, vidas, puntos):
         self.name = name
         self.vidas = vidas
@@ -15,7 +24,7 @@ class Player:
 
 
 def show_title(player):
-
+    """Muestra la pantalla de inicio"""
 
     title = "   💀💀 🅰 🅷 🅾 🆁 🅲 🅰 🅳 🅾 💀💀"
     print(50*"*")
@@ -105,7 +114,8 @@ def new_game(player):
 def register(player):
     print(f"¿No eres {player.name}?\nInicia sesión ahora.")
     name = input("Ingresa tu usuario:  ")
-    global current_player = Player(name, 6, 0)
+    global current_player
+    current_player = Player(name, 6, 0)
     print(current_player.name)
     print(player.name)
     input("Toque enter para salir.")
